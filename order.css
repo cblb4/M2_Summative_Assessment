@@ -1,0 +1,252 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #eaeed3;
+    overflow-x: auto; 
+    white-space: nowrap; 
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    width: 180px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #5b6d3d;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.nav-menu {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.nav-menu li {
+    margin: 15px 0;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #5b6d3d;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    gap: 10px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.nav-menu .active a, .nav-menu a:hover {
+    background-color: #a9b899;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 30px;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    overflow-x: auto; 
+    white-space: nowrap; 
+    color: #5b6d3d;
+}
+
+/* Customer Details */
+.customer-section {
+    background: #5b6d3d;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.customer-section h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.customer-section label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.customer-section input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Order, Delivery, and Packaging Details */
+.order-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+    overflow-x: auto; 
+    white-space: nowrap; 
+}
+
+.order-section {
+    background: #5b6d3d;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    width: 30%;
+    flex-shrink: 0; 
+}
+
+.order-section h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.order-section label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.order-section input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Scrollable Order Sections */
+.order-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 15px;
+    padding: 10px;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    scrollbar-width: thin; 
+    -ms-overflow-style: none;
+}
+
+.order-scroll::-webkit-scrollbar {
+    height: 10px; 
+}
+
+.order-scroll::-webkit-scrollbar-thumb {
+    background: #5b6d3d;
+    border-radius: 10px;
+}
+
+.order-scroll::-webkit-scrollbar-track {
+    background: #d3d3d3;
+}
+
+/* Scroll Buttons */
+.scroll-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.scroll-buttons button {
+    background-color: #5b6d3d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+    margin: 0 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+.scroll-buttons button:hover {
+    background-color: #a9b899;
+}
+
+
+/* Fix for Missing Text */
+.payment-details label {
+    display: block;
+    font-weight: 600;
+    color: white; 
+}
+
+/* Remove Button Outline */
+button, .btn {
+    border: none; 
+    background-color: #a3b18a; 
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+button:hover, .btn:hover {
+    background-color: #8c9e6d;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    margin: 5px;
+}
+

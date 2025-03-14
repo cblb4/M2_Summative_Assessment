@@ -1,0 +1,178 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #eaeed3;
+    overflow: hidden; /* Prevents unwanted scrollbars */
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    color: #5b6d3d;
+    padding: 20px;
+    position: fixed; /* Keeps it in place */
+    height: 100vh; /* Full height */
+    left: 0;
+    top: 0;
+    overflow-y: auto; /* Allows scrolling if needed */
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    width: 180px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.logo-text {
+    font-size: 22px;
+    font-weight: bold;
+    color: #5b6d3d;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.nav-menu {
+    list-style: none;
+    margin-top: 10px;
+}
+
+.nav-menu li {
+    margin: 15px 0;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #5b6d3d;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    gap: 10px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.nav-menu .active a, .nav-menu a:hover {
+    background-color: #a9b899;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 30px;
+    margin-left: 250px; /* Pushes content to the right, keeping sidebar fixed */
+    width: calc(100% - 250px); /* Ensures content stays within the screen */
+}
+
+/* Page Titles */
+h2 {
+    color: #4a5d2f;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Staff Page Layout */
+.staff-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+/* Staff Form */
+.staff-form {
+    width: 35%;
+    background: #5b6d3d;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.staff-form label {
+    font-weight: 600;
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.staff-form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.staff-form input:focus {
+    outline: 2px solid #a9b899;
+}
+
+/* Staff Table */
+.staff-table {
+    width: 60%;
+    height: 250px;
+    background: #d3d3d3;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.staff-table p {
+    font-size: 16px;
+    color: #444;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #a3b18a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    width: 22%;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #8c9e6d;
+}
