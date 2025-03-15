@@ -18,7 +18,10 @@ try {
     $stmt->close();
 } catch (Exception $e) {
     // Handle error
+    echo "Error fetching total sales: " . $e->getMessage();
 }
+
+
 
 // Get total income (sum of order costs)
 try {

@@ -23,59 +23,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $price = $_POST['price'];
             $expiration_date = $_POST['expiration_date'];
             
-            // STEP 1: First check if the supply record already exists in the supply table
-            $stmt = $conn->prepare("SELECT * FROM supply WHERE supply_id = ?");
-            $stmt->bind_param("s", $supply_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            // First, check if the employee exists in the employee table
+            $check_employee = $conn->prepare("SELECT employee_id FROM employee WHERE employee_id = ?");
+            $check_employee->bind_param("s", $employee_id);
+            $check_employee->execute();
+            $employee_result = $check_employee->get_result();
+            $check_employee->close();
             
-            // If supply record doesn't exist, first create it in the supply table
-            if ($result->num_rows == 0) {
-                // Get supplier_id if not provided
-                if (empty($_POST['supplier_id'])) {
-                    $supplier_id = 45; // Using a default supplier_id if not provided
-                } else {
-                    $supplier_id = $_POST['supplier_id'];
-                }
-                
-                // Insert into supply table first
-                $stmt = $conn->prepare("INSERT INTO supply (supply_id, date, employee_id, supplier_id) 
-                        VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $supply_id, $date, $employee_id, $supplier_id);
-                
-                if (!$stmt->execute()) {
-                    $error = "Error adding supply record: " . $stmt->error;
-                    $stmt->close();
-                    // Don't proceed to the next step if this fails
-                } else {
-                    $stmt->close();
-                    
-                    // STEP 2: Now insert into supply_details
-                    $stmt = $conn->prepare("INSERT INTO supply_details (supply_id, ingredients_id, quantity, price, expiration_date) 
-                            VALUES (?, ?, ?, ?, ?)");
-                    $stmt->bind_param("ssdss", $supply_id, $ingredients_id, $quantity, $price, $expiration_date);
-                    
-                    if ($stmt->execute()) {
-                        $message = "Supply record added successfully";
-                    } else {
-                        $error = "Error adding supply details: " . $stmt->error;
-                    }
-                    $stmt->close();
-                }
+            if ($employee_result->num_rows == 0) {
+                $error = "Error: Employee ID $employee_id does not exist. Please enter a valid Employee ID.";
             } else {
-                // If supply already exists, just add the details
-                $stmt->close();
+                // Next, check if the ingredients exist
+                $check_ingredients = $conn->prepare("SELECT ingredients_id FROM ingredients WHERE ingredients_id = ?");
+                $check_ingredients->bind_param("s", $ingredients_id);
+                $check_ingredients->execute();
+                $ingredients_result = $check_ingredients->get_result();
+                $check_ingredients->close();
                 
-                $stmt = $conn->prepare("INSERT INTO supply_details (supply_id, ingredients_id, quantity, price, expiration_date) 
-                        VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssdss", $supply_id, $ingredients_id, $quantity, $price, $expiration_date);
-                
-                if ($stmt->execute()) {
-                    $message = "Supply details added successfully";
+                if ($ingredients_result->num_rows == 0) {
+                    $error = "Error: Ingredients ID $ingredients_id does not exist. Please enter a valid Ingredients ID.";
                 } else {
-                    $error = "Error adding supply details: " . $stmt->error;
+                    // STEP 1: Check if the supply record already exists in the supply table
+                    $stmt = $conn->prepare("SELECT * FROM supply WHERE supply_id = ?");
+                    $stmt->bind_param("s", $supply_id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    
+                    // If supply record doesn't exist, first create it in the supply table
+                    if ($result->num_rows == 0) {
+                        // Get supplier_id if not provided
+                        if (empty($_POST['supplier_id'])) {
+                            $supplier_id = 45; // Using a default supplier_id if not provided
+                        } else {
+                            $supplier_id = $_POST['supplier_id'];
+                        }
+                        
+                        // Check if supplier exists
+                        $check_supplier = $conn->prepare("SELECT supplier_id FROM supplier WHERE supplier_id = ?");
+                        $check_supplier->bind_param("s", $supplier_id);
+                        $check_supplier->execute();
+                        $supplier_result = $check_supplier->get_result();
+                        $check_supplier->close();
+                        
+                        if ($supplier_result->num_rows == 0) {
+                            $error = "Error: Supplier ID $supplier_id does not exist. Please enter a valid Supplier ID.";
+                        } else {
+                            // Insert into supply table first
+                            $stmt->close();
+                            $stmt = $conn->prepare("INSERT INTO supply (supply_id, date, employee_id, supplier_id) 
+                                    VALUES (?, ?, ?, ?)");
+                            $stmt->bind_param("ssss", $supply_id, $date, $employee_id, $supplier_id);
+                            
+                            if (!$stmt->execute()) {
+                                $error = "Error adding supply record: " . $stmt->error;
+                                $stmt->close();
+                                // Don't proceed to the next step if this fails
+                            } else {
+                                $stmt->close();
+                                
+                                // STEP 2: Now insert into supply_details
+                                $stmt = $conn->prepare("INSERT INTO supply_details (supply_id, ingredients_id, quantity, price, expiration_date) 
+                                        VALUES (?, ?, ?, ?, ?)");
+                                $stmt->bind_param("ssdss", $supply_id, $ingredients_id, $quantity, $price, $expiration_date);
+                                
+                                if ($stmt->execute()) {
+                                    $message = "Supply record added successfully";
+                                } else {
+                                    $error = "Error adding supply details: " . $stmt->error;
+                                }
+                                $stmt->close();
+                            }
+                        }
+                    } else {
+                        // If supply already exists, just add the details
+                        $stmt->close();
+                        
+                        $stmt = $conn->prepare("INSERT INTO supply_details (supply_id, ingredients_id, quantity, price, expiration_date) 
+                                VALUES (?, ?, ?, ?, ?)");
+                        $stmt->bind_param("ssdss", $supply_id, $ingredients_id, $quantity, $price, $expiration_date);
+                        
+                        if ($stmt->execute()) {
+                            $message = "Supply details added successfully";
+                        } else {
+                            $error = "Error adding supply details: " . $stmt->error;
+                        }
+                        $stmt->close();
+                    }
                 }
-                $stmt->close();
             }
         } 
         else if (isset($_POST['action_type']) && $_POST['action_type'] == 'supplier') {
@@ -285,10 +319,23 @@ if (isset($_POST['search_term']) && !empty($_POST['search_term'])) {
 // Fetch all inventory records for the table
 $inventory_items = array();
 try {
-    $stmt = $conn->prepare("SELECT sd.*, s.date, s.employee_id, s.supplier_id, i.name AS ingredient_name 
+    // Updated query to fetch more comprehensive data
+    $stmt = $conn->prepare("SELECT 
+                            sd.*, 
+                            s.date, 
+                            s.employee_id, 
+                            s.supplier_id, 
+                            i.name AS ingredient_name,
+                            i.unit,
+                            i.current,
+                            i.critical_level,
+                            sup.name AS supplier_name,
+                            sup.contact,
+                            sup.address_id
                             FROM supply_details sd 
                             LEFT JOIN supply s ON sd.supply_id = s.supply_id
                             LEFT JOIN ingredients i ON sd.ingredients_id = i.ingredients_id
+                            LEFT JOIN supplier sup ON s.supplier_id = sup.supplier_id
                             ORDER BY s.date DESC");
     $stmt->execute();
     $result = $stmt->get_result();
@@ -345,20 +392,21 @@ try {
 
             <div class="details-row">
                 <!-- Supply Details -->
-                <div class="details-section">
-                    <h3>Supply Details:</h3>
-                    <form id="supply-form" method="POST" action="">
-                        <input type="hidden" name="action_type" value="supply">
-                        <input type="text" name="supply_id" placeholder="Supply_ID">
-                        <input type="text" name="date" placeholder="Date">
-                        <input type="text" name="employee_id" placeholder="Employee_ID">
-                        <input type="text" name="supplier_id" placeholder="Supplier_ID">
-                        <input type="text" name="ingredients_id" placeholder="Ingredients_ID">
-                        <input type="text" name="quantity" placeholder="Quantity">
-                        <input type="text" name="price" placeholder="Price">
-                        <input type="text" name="expiration_date" placeholder="Expiration Date">
-                    </form>
-                </div>
+<!-- For the Supply Details form -->
+<div class="details-section">
+    <h3>Supply Details:</h3>
+    <form id="supply-form" method="POST" action="">
+        <input type="hidden" name="action_type" value="supply">
+        <input type="text" name="supply_id" placeholder="Supply_ID">
+        <input type="date" name="date" placeholder="Date">  <!-- Changed to type="date" -->
+        <input type="text" name="employee_id" placeholder="Employee_ID">
+        <input type="text" name="supplier_id" placeholder="Supplier_ID">
+        <input type="text" name="ingredients_id" placeholder="Ingredients_ID">
+        <input type="text" name="quantity" placeholder="Quantity">
+        <input type="text" name="price" placeholder="Price">
+        <input type="date" name="expiration_date" placeholder="Expiration Date">  <!-- Changed to type="date" -->
+    </form>
+</div>
 
                 <!-- Supplier Details -->
                 <div class="details-section">
@@ -409,24 +457,38 @@ try {
                             <tr>
                                 <th>Supply ID</th>
                                 <th>Date</th>
+                                <th>Ingredient ID</th>
                                 <th>Ingredient</th>
+                                <th>Supplier ID</th>
+                                <th>Supplier</th>
+                                <th>Contact</th>
+                                <th>Address ID</th>
+                                <th>Employee ID</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
                                 <th>Expiration</th>
+                                <th>Unit</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($inventory_items as $item): ?>
                                 <tr>
-                                    <td><?php echo $item['supply_id']; ?></td>
-                                    <td><?php echo $item['date']; ?></td>
-                                    <td><?php echo $item['ingredient_name']; ?></td>
-                                    <td><?php echo $item['quantity']; ?></td>
-                                    <td><?php echo $item['price']; ?></td>
-                                    <td><?php echo $item['expiration_date']; ?></td>
+                                <td><?php echo $item['supply_id']; ?></td>
+                                <td><?php echo $item['date']; ?></td>
+                                <td><?php echo $item['ingredients_id']; ?></td>
+                                <td><?php echo $item['ingredient_name']; ?></td>
+                                <td><?php echo $item['supplier_id']; ?></td>
+                                <td><?php echo $item['supplier_name']; ?></td>
+                                <td><?php echo $item['contact']; ?></td>
+                                <td><?php echo $item['address_id']; ?></td>
+                                <td><?php echo $item['employee_id']; ?></td>
+                                <td><?php echo $item['quantity']; ?></td>
+                                <td><?php echo $item['price']; ?></td>
+                                <td><?php echo $item['expiration_date']; ?></td>
+                                <td><?php echo $item['unit']; ?></td>
                                     <td>
-                                        <button onclick="loadInventoryData('<?php echo htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8'); ?>')">Edit</button>
+                                        <button onclick="loadAllFormsData('<?php echo htmlspecialchars(json_encode($item), ENT_QUOTES, 'UTF-8'); ?>')">Edit</button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -570,23 +632,48 @@ try {
         }
     }
     
-    // Load data from inventory table into supply form
-    function loadInventoryData(jsonString) {
+    // New function to load all forms data
+    function loadAllFormsData(jsonString) {
         try {
             clearForms();
             const data = JSON.parse(jsonString);
             
-            const form = document.getElementById('supply-form');
-            form.elements['supply_id'].value = data.supply_id;
-            form.elements['date'].value = data.date;
-            form.elements['employee_id'].value = data.employee_id;
-            form.elements['supplier_id'].value = data.supplier_id;
-            form.elements['ingredients_id'].value = data.ingredients_id;
-            form.elements['quantity'].value = data.quantity;
-            form.elements['price'].value = data.price;
-            form.elements['expiration_date'].value = data.expiration_date;
+            // Populate Supply form
+            const supplyForm = document.getElementById('supply-form');
+            supplyForm.elements['supply_id'].value = data.supply_id;
+            supplyForm.elements['date'].value = data.date;
+            supplyForm.elements['employee_id'].value = data.employee_id;
+            supplyForm.elements['supplier_id'].value = data.supplier_id;
+            supplyForm.elements['ingredients_id'].value = data.ingredients_id;
+            supplyForm.elements['quantity'].value = data.quantity;
+            supplyForm.elements['price'].value = data.price;
+            supplyForm.elements['expiration_date'].value = data.expiration_date;
+            
+            // Populate Supplier form
+            const supplierForm = document.getElementById('supplier-form');
+            supplierForm.elements['supplier_id'].value = data.supplier_id;
+            supplierForm.elements['name'].value = data.supplier_name;
+            supplierForm.elements['contact'].value = data.contact;
+            supplierForm.elements['address_id'].value = data.address_id;
+            
+            // Populate Ingredients form
+            const ingredientsForm = document.getElementById('ingredients-form');
+            ingredientsForm.elements['ingredients_id'].value = data.ingredients_id;
+            ingredientsForm.elements['name'].value = data.ingredient_name;
+            ingredientsForm.elements['unit'].value = data.unit;
+            ingredientsForm.elements['current'].value = data.current;
+            ingredientsForm.elements['critical_level'].value = data.critical_level;
+            
+            // Optionally, highlight all forms to indicate they're all populated
+            document.querySelectorAll('.details-section').forEach(section => {
+                section.style.backgroundColor = '#f0f7ff';
+                setTimeout(() => {
+                    section.style.backgroundColor = '';
+                }, 1000);
+            });
         } catch (e) {
             console.error("Error parsing JSON data:", e);
+            alert("Error loading data. See console for details.");
         }
     }
     </script>

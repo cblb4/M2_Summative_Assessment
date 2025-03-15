@@ -1,7 +1,10 @@
 <?php
+
+session_start();
 // Include database connection
 include 'db_connect.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,13 +45,13 @@ include 'db_connect.php';
                 <div class="customer-section">
                     <h3>Customer Details</h3>
                     <label>Customer ID:</label>
-                    <input type="text" name="customer_id" placeholder="Enter Customer ID">
+                    <input type="text" name="customer_id" placeholder="Enter Customer ID" value="<?php echo isset($_POST['customer_id']) ? $_POST['customer_id'] : ''; ?>">
                     <label>Name:</label>
-                    <input type="text" name="name" placeholder="Enter Name">
+                    <input type="text" name="name" placeholder="Enter Name" value="<?php echo isset($_POST['name']) ? $_POST['name'] : ''; ?>">
                     <label>Address ID:</label>
-                    <input type="text" name="address_id" placeholder="Enter Address ID">
+                    <input type="text" name="address_id" placeholder="Enter Address ID" value="<?php echo isset($_POST['address_id']) ? $_POST['address_id'] : ''; ?>">
                     <label>Customer Number:</label>
-                    <input type="text" name="customer_number" placeholder="Enter Customer Number">
+                    <input type="text" name="customer_number" placeholder="Enter Customer Number" value="<?php echo isset($_POST['customer_number']) ? $_POST['customer_number'] : ''; ?>">
                 </div>
                 
                 <!-- Order, Delivery, and Packaging Details -->
@@ -56,49 +59,49 @@ include 'db_connect.php';
                     <div class="order-section">
                         <h3>Order Details</h3>
                         <label>Order ID:</label>
-                        <input type="text" name="order_id" placeholder="Enter Order ID">
+                        <input type="text" name="order_id" placeholder="Enter Order ID" value="<?php echo isset($_POST['order_id']) ? $_POST['order_id'] : ''; ?>">
                         <label>Date:</label>
-                        <input type="date" name="date" placeholder="Enter Date">
+                        <input type="date" name="date" value="<?php echo isset($_POST['date']) ? $_POST['date'] : ''; ?>">
                         <label>Customer ID:</label>
-                        <input type="text" name="order_customer_id" placeholder="Enter Customer ID">
+                        <input type="text" name="order_customer_id" placeholder="Enter Customer ID" value="<?php echo isset($_POST['order_customer_id']) ? $_POST['order_customer_id'] : ''; ?>">
                         <label>Employee ID:</label>
-                        <input type="text" name="employee_id" placeholder="Enter Employee ID">
+                        <input type="text" name="employee_id" placeholder="Enter Employee ID" value="<?php echo isset($_POST['employee_id']) ? $_POST['employee_id'] : ''; ?>">
                         <label>Quantity:</label>
-                        <input type="number" name="quantity" placeholder="Enter Quantity">
+                        <input type="number" name="quantity" placeholder="Enter Quantity" value="<?php echo isset($_POST['quantity']) ? $_POST['quantity'] : ''; ?>">
                         <label>Price:</label>
-                        <input type="text" name="price" placeholder="Enter Price">
+                        <input type="text" name="price" placeholder="Enter Price" value="<?php echo isset($_POST['price']) ? $_POST['price'] : ''; ?>">
                     </div>
                     <div class="order-section">
                         <h3>Delivery Details</h3>
                         <label>Delivery ID:</label>
-                        <input type="text" name="delivery_id" placeholder="Enter Delivery ID">
+                        <input type="text" name="delivery_id" placeholder="Enter Delivery ID" value="<?php echo isset($_POST['delivery_id']) ? $_POST['delivery_id'] : ''; ?>">
                         <label>Employee ID:</label>
-                        <input type="text" name="delivery_employee_id" placeholder="Enter Employee ID">
+                        <input type="text" name="delivery_employee_id" placeholder="Enter Employee ID" value="<?php echo isset($_POST['delivery_employee_id']) ? $_POST['delivery_employee_id'] : ''; ?>">
                         <label>Order ID:</label>
-                        <input type="text" name="delivery_order_id" placeholder="Enter Order ID">
+                        <input type="text" name="delivery_order_id" placeholder="Enter Order ID" value="<?php echo isset($_POST['delivery_order_id']) ? $_POST['delivery_order_id'] : ''; ?>">
                         <label>Date:</label>
-                        <input type="date" name="delivery_date" placeholder="Enter Date">
+                        <input type="date" name="delivery_date" value="<?php echo isset($_POST['delivery_date']) ? $_POST['delivery_date'] : ''; ?>">
                         <label>Departure:</label>
-                        <input type="text" name="departure" placeholder="Enter Departure">
+                        <input type="date" name="departure" value="<?php echo isset($_POST['departure']) ? $_POST['departure'] : ''; ?>">
                         <label>Arrival:</label>
-                        <input type="text" name="arrival" placeholder="Enter Arrival">
+                        <input type="date" name="arrival" value="<?php echo isset($_POST['arrival']) ? $_POST['arrival'] : ''; ?>">
                         <label>Fee:</label>
-                        <input type="text" name="fee" placeholder="Enter Fee">
+                        <input type="text" name="fee" placeholder="Enter Fee" value="<?php echo isset($_POST['fee']) ? $_POST['fee'] : ''; ?>">
                     </div>
                     <div class="order-section">
                         <h3>Packaging Details</h3>
                         <label>Packaging ID:</label>
-                        <input type="text" name="packaging_id" placeholder="Enter Packaging ID">
+                        <input type="text" name="packaging_id" placeholder="Enter Packaging ID" value="<?php echo isset($_POST['packaging_id']) ? $_POST['packaging_id'] : ''; ?>">
                         <label>Order ID:</label>
-                        <input type="text" name="packaging_order_id" placeholder="Enter Order ID">
+                        <input type="text" name="packaging_order_id" placeholder="Enter Order ID" value="<?php echo isset($_POST['packaging_order_id']) ? $_POST['packaging_order_id'] : ''; ?>">
                         <label>Quantity:</label>
-                        <input type="number" name="packaging_quantity" placeholder="Enter Quantity">
+                        <input type="number" name="packaging_quantity" placeholder="Enter Quantity" value="<?php echo isset($_POST['packaging_quantity']) ? $_POST['packaging_quantity'] : ''; ?>">
                         <label>Type:</label>
-                        <input type="text" name="type" placeholder="Enter Type">
+                        <input type="text" name="type" placeholder="Enter Type" value="<?php echo isset($_POST['type']) ? $_POST['type'] : ''; ?>">
                         <label>Size:</label>
-                        <input type="text" name="size" placeholder="Enter Size">
+                        <input type="text" name="size" placeholder="Enter Size" value="<?php echo isset($_POST['size']) ? $_POST['size'] : ''; ?>">
                         <label>Price:</label>
-                        <input type="text" name="packaging_price" placeholder="Enter Price">
+                        <input type="text" name="packaging_price" placeholder="Enter Price" value="<?php echo isset($_POST['packaging_price']) ? $_POST['packaging_price'] : ''; ?>">
                     </div>
                 </div>
                 
@@ -123,6 +126,6 @@ include 'db_connect.php';
     function clearForm() {
         document.querySelector('form').reset();
     }
-</script>
+    </script>
 </body>
 </html>
