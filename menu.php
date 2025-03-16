@@ -1,6 +1,3 @@
-// Debugging
-echo "<!-- Updated menu.php with category field - " . date('Y-m-d H:i:s') . " -->";
-
 <?php
 // Include database connection 
 include 'db_connect.php';
